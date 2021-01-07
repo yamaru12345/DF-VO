@@ -960,6 +960,7 @@ class VisualOdometry():
             
             # Reading image
             if self.cfg.dataset == "kitti":
+                print(self.img_path_dir+"/{:06d}.{}".format(img_id, self.cfg.image.ext))
                 img = read_image(self.img_path_dir+"/{:06d}.{}".format(img_id, self.cfg.image.ext), 
                                     self.cfg.image.height, self.cfg.image.width)
             elif "tum" in self.cfg.dataset:
