@@ -91,7 +91,7 @@ visualization:
     vis_traj: True
     draw_scale: 0.8
     mono_scale: 1 #5.4; 0.2
-    vis_gt_traj: True
+    vis_gt_traj: False
   depth:
     use_tracking_depth: False
     vis_full_depth: False
