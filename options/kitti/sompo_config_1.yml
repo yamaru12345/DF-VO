@@ -75,7 +75,7 @@ crop:
 visualization:
   window_h: 900
   window_w: 1500
-  save_img: False
+  save_img: True
   flow: 
     vis_full_flow: True
     vis_back_flow: True
