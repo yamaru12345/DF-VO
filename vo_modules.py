@@ -1002,7 +1002,7 @@ class VisualOdometry():
 
             """ Visualization """
             start_time = time()
-            #self=self.drawer.main(self)
+            self=self.drawer.main(self)
             self.timers.timers["visualization"].append(time()-start_time)
 
             """ Update reference and current data """
