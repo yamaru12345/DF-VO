@@ -542,7 +542,6 @@ class VisualOdometry():
         valid_kp_mask = non_zero_mask * depth_range_mask * segment_mask
 
         kp1 = kp1[valid_kp_mask]
-        np.save('/content/kp1.npy', kp1)
         kp2 = kp2[valid_kp_mask]
 
         # Get 3D coordinates for kp1
