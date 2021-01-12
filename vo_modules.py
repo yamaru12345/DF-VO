@@ -249,8 +249,14 @@ class VisualOdometry():
                                     )
             elif depth_src is None:
                 depth_data_dir = None
+                
+        # get segment data directory
+        img_seq_dir = os.path.join(
+                            self.cfg.directory.segment_dir,
+                            self.cfg.seq
+                            )
  
-        return img_data_dir, depth_data_dir, depth_src
+        return img_data_dir, depth_data_dir, depth_src, segment_dir
 
     def generate_kp_samples(self, img_h, img_w, crop, N):
         """generate keypoint samples according to image height, width
@@ -346,7 +352,7 @@ class VisualOdometry():
                                             )
 
         # get image and depth data directory
-        self.img_path_dir, self.depth_seq_dir, self.depth_src = self.get_img_depth_dir()
+        self.img_path_dir, self.depth_seq_dir, self.depth_src, self.segment_path_dir = self.get_img_depth_dir()
 
         # generate keypoint sampling scheme
         self.uniform_kp_list = None
@@ -695,7 +701,8 @@ class VisualOdometry():
                                     N_best=num_kp_best,
                                     kp_sel_method=self.cfg.deep_flow.kp_sel_method,
                                     forward_backward=forward_backward,
-                                    dataset=self.cfg.dataset)
+                                    dataset=self.cfg.dataset,
+                                    segment_path=self.segment_path_dir)
             
             # Save keypoints at current view
             kp_ref_best[i*batch_size:(i+1)*batch_size] = batch_kp_cur_best.copy() # each kp_ref_best saves best-N kp at cur-view
