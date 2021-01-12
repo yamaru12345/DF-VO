@@ -938,12 +938,14 @@ class VisualOdometry():
         """ Initialization """
         # Synchronize rgb-d-pose pair
         self.rgb_d_pose_pair = self.synchronize_rgbd_pose_pairs()
-        len_seq = len(self.rgb_d_pose_pair)
+        #len_seq = len(self.rgb_d_pose_pair)
+        len_seq = 100
 
         # Main
         print("==> Start VO")
         main_start_time = time()
-        start_frame = int(input("Start with frame: "))
+        #start_frame = int(input("Start with frame: "))
+        start_frame = 0
 
         for img_id in tqdm(range(start_frame, len_seq)):
             self.tracking_mode = "Ess. Mat."
