@@ -536,6 +536,7 @@ class VisualOdometry():
         kp_depths = depth_1[kp1_int[:, 1], kp1_int[:, 0]]
         non_zero_mask = (kp_depths != 0)
         depth_range_mask = (kp_depths < self.cfg.depth.max_depth) * (kp_depths > self.cfg.depth.min_depth)
+        print(self.cur_data['id'], depth_range_mask.shape)
         valid_kp_mask = non_zero_mask * depth_range_mask
 
         kp1 = kp1[valid_kp_mask]
@@ -702,7 +703,7 @@ class VisualOdometry():
                                     kp_sel_method=self.cfg.deep_flow.kp_sel_method,
                                     forward_backward=forward_backward,
                                     dataset=self.cfg.dataset,
-                                    segment_path=self.segment_path_dir)
+                                    mask=masks[self.cur_data['id']])
             
             # Save keypoints at current view
             kp_ref_best[i*batch_size:(i+1)*batch_size] = batch_kp_cur_best.copy() # each kp_ref_best saves best-N kp at cur-view
