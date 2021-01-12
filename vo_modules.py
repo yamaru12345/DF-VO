@@ -737,7 +737,8 @@ class VisualOdometry():
         # First frame
         if self.tracking_stage == 0:
             # initial
-            self.cur_data['pose'] = SE3(self.gt_poses[self.cur_data['id']])
+            #self.cur_data['pose'] = SE3(self.gt_poses[self.cur_data['id']])
+            self.cur_data['pose'] = SE3()
             self.tracking_stage = 1
             return
 
