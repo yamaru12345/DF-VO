@@ -251,14 +251,8 @@ class VisualOdometry():
                                     )
             elif depth_src is None:
                 depth_data_dir = None
-                
-        # get segment data directory
-        segment_dir = os.path.join(
-                            self.cfg.directory.segment_dir,
-                            self.cfg.seq
-                            )
- 
-        return img_data_dir, depth_data_dir, depth_src, segment_dir
+        
+        return img_data_dir, depth_data_dir, depth_src
 
     def generate_kp_samples(self, img_h, img_w, crop, N):
         """generate keypoint samples according to image height, width
@@ -342,8 +336,9 @@ class VisualOdometry():
         - Set drawer
         """
         # read camera intrinsics
-        intrinsics_param = self.get_intrinsics_param(self.cfg.dataset)
-        self.cam_intrinsics = Intrinsics(intrinsics_param)
+        #intrinsics_param = self.get_intrinsics_param(self.cfg.dataset)
+        #self.cam_intrinsics = Intrinsics(intrinsics_param)
+        self.cam_intrinsics = Intrinsics()
 
         # get tracking method
         self.tracking_method = self.get_tracking_method(self.cfg.tracking_method)
@@ -538,8 +533,7 @@ class VisualOdometry():
         kp_depths = depth_1[kp1_int[:, 1], kp1_int[:, 0]]
         non_zero_mask = (kp_depths != 0)
         depth_range_mask = (kp_depths < self.cfg.depth.max_depth) * (kp_depths > self.cfg.depth.min_depth)
-        segment_mask = segment_1[kp1_int[:, 1], kp1_int[:, 0]]
-        valid_kp_mask = non_zero_mask * depth_range_mask * segment_mask
+        valid_kp_mask = non_zero_mask * depth_range_mask
 
         kp1 = kp1[valid_kp_mask]
         kp2 = kp2[valid_kp_mask]
@@ -704,8 +698,7 @@ class VisualOdometry():
                                     N_best=num_kp_best,
                                     kp_sel_method=self.cfg.deep_flow.kp_sel_method,
                                     forward_backward=forward_backward,
-                                    dataset=self.cfg.dataset,
-                                    mask=cur_data['mask'])  # maskのindex要変更!!
+                                    dataset=self.cfg.dataset)
             
             # Save keypoints at current view
             kp_ref_best[i*batch_size:(i+1)*batch_size] = batch_kp_cur_best.copy() # each kp_ref_best saves best-N kp at cur-view
@@ -983,11 +976,7 @@ class VisualOdometry():
             img_h, img_w, _ = image_shape(img)
             self.cur_data['img'] = img
             self.timers.timers["img_reading"].append(time()-start_time)
-            
-            # Reading mask
-            mask = np.load(self.segment_path_dir+"/{:06d}.npy".format(img_id))
-            self.cur_data['mask'] = mask
-
+           
             # Reading/Predicting depth
             if self.depth_src is not None:
                 self.cur_data['raw_depth'] = self.load_depth(
