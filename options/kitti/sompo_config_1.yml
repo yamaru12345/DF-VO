@@ -7,7 +7,6 @@ image:
   height: 720
   width: 1280
   ext: png
-seq: "10"
 result_dir: result/tmp/0
 
 # ----------------------------------------------------------------------------
@@ -104,4 +103,3 @@ directory:
   gt_pose_dir: dataset/kitti_odom/gt_poses/
   img_seq_dir: dataset/odom_data/
   depth_dir: dataset/depth/
-  segment_dir: dataset/segment/
