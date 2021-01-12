@@ -512,7 +512,7 @@ class VisualOdometry():
         pose.t = t
         return pose, best_inliers
 
-    def compute_pose_3d2d(self, kp1, kp2, depth_1):
+    def compute_pose_3d2d(self, kp1, kp2, depth_1, segment_1):
         """Compute pose from 3d-2d correspondences
         Args:
             kp1 (Nx2 array): keypoints for view-1
@@ -536,10 +536,11 @@ class VisualOdometry():
         # Filter keypoints outside depth range
         kp1_int = kp1.astype(np.int)
         kp_depths = depth_1[kp1_int[:, 1], kp1_int[:, 0]]
-        print(depth_1.shape, kp1_int[:, 1], kp1_int[:, 0], kp_depths.shape) 
         non_zero_mask = (kp_depths != 0)
         depth_range_mask = (kp_depths < self.cfg.depth.max_depth) * (kp_depths > self.cfg.depth.min_depth)
-        valid_kp_mask = non_zero_mask * depth_range_mask
+        segment_mask = segment_1[kp1_int[:, 1], kp1_int[:, 0]]
+        print(sum(non_zero_mask * depth_range_mask), sum(non_zero_mask * depth_range_mask * segment_mask))
+        valid_kp_mask = non_zero_mask * depth_range_mask * segment_mask
 
         kp1 = kp1[valid_kp_mask]
         kp2 = kp2[valid_kp_mask]
@@ -788,7 +789,8 @@ class VisualOdometry():
                         = self.compute_pose_3d2d(
                                     cur_data[self.cfg.PnP.kp_src],
                                     ref_data[self.cfg.PnP.kp_src][ref_id],
-                                    ref_data['depth'][ref_id]
+                                    ref_data['depth'][ref_id],
+                                    cur_data['mask']
                                     ) # pose: from cur->ref
                     # use PnP pose instead of E-pose
                     hybrid_pose = pnp_pose
