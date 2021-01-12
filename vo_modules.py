@@ -985,6 +985,7 @@ class VisualOdometry():
             
             # Reading mask
             mask = np.load(self.segment_path_dir+"/{:06d}.npy".format(img_id))
+            print('AA', mask.shape)
             self.cur_data['mask'] = mask
 
             # Reading/Predicting depth
