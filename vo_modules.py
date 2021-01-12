@@ -539,7 +539,6 @@ class VisualOdometry():
         non_zero_mask = (kp_depths != 0)
         depth_range_mask = (kp_depths < self.cfg.depth.max_depth) * (kp_depths > self.cfg.depth.min_depth)
         segment_mask = segment_1[kp1_int[:, 1], kp1_int[:, 0]]
-        print(sum(non_zero_mask * depth_range_mask), sum(non_zero_mask * depth_range_mask * segment_mask))
         valid_kp_mask = non_zero_mask * depth_range_mask * segment_mask
 
         kp1 = kp1[valid_kp_mask]
