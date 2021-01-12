@@ -85,6 +85,7 @@ class VisualOdometry():
                         'id': 0,
                         'timestamp': 0,
                         'img': np.zeros(1),
+                        'mask': np.zeros(1),
                         'depth': np.zeros(1),
                         'pose': np.eye(4),
                         'kp': np.zeros(1),
@@ -389,7 +390,7 @@ class VisualOdometry():
         self.drawer.get_traj_init_xy(
                         vis_h=self.drawer.h,
                         vis_w=self.drawer.h,
-                        gt_poses=self.gt_poses)
+                        gt_poses=self.gt_poses)        
 
     def load_depth(self, depth_seq_dir, img_id, depth_src,
                    resize=None, dataset="kitti"):
@@ -703,7 +704,7 @@ class VisualOdometry():
                                     kp_sel_method=self.cfg.deep_flow.kp_sel_method,
                                     forward_backward=forward_backward,
                                     dataset=self.cfg.dataset,
-                                    mask=masks[self.cur_data['id']])
+                                    mask=self.cur_data['mask'])  # maskのindex要変更!!
             
             # Save keypoints at current view
             kp_ref_best[i*batch_size:(i+1)*batch_size] = batch_kp_cur_best.copy() # each kp_ref_best saves best-N kp at cur-view
@@ -980,6 +981,10 @@ class VisualOdometry():
             img_h, img_w, _ = image_shape(img)
             self.cur_data['img'] = img
             self.timers.timers["img_reading"].append(time()-start_time)
+            
+            # Reading mask
+            mask = np.load(self.segment_path_dir+"/{:06d}.npy".format(img_id)
+            self.cur_data['mask'] = mask
 
             # Reading/Predicting depth
             if self.depth_src is not None:
