@@ -347,7 +347,7 @@ class VisualOdometry():
                                             )
 
         # get image and depth data directory
-        self.img_path_dir, self.depth_seq_dir, self.depth_src, self.segment_path_dir = self.get_img_depth_dir()
+        self.img_path_dir, self.depth_seq_dir, self.depth_src = self.get_img_depth_dir()
 
         # generate keypoint sampling scheme
         self.uniform_kp_list = None
@@ -737,7 +737,8 @@ class VisualOdometry():
         # First frame
         if self.tracking_stage == 0:
             # initial
-            self.cur_data['pose'] = SE3(self.gt_poses[self.cur_data['id']])
+            #self.cur_data['pose'] = SE3(self.gt_poses[self.cur_data['id']])
+            self.cur_data['pose'] = SE3()
             self.tracking_stage = 1
             return
 
