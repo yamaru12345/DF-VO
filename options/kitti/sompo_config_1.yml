@@ -28,7 +28,7 @@ compute_2d2d_pose:
 
 PnP:
   ransac:
-    iter: 1000
+    iter: 10000
     reproj_thre: 1
     repeat: 5
   kp_src: kp_list # [kp_list, kp_best]
@@ -56,7 +56,7 @@ depth:
 # ----------------------------------------------------------------------------
 deep_flow:
   forward_backward: True
-  num_kp: 2000
+  num_kp: 20000
   kp_sel_method: bestN
   network: liteflow  
     # liteflow: LiteFlowNet
