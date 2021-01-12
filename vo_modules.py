@@ -505,7 +505,7 @@ class VisualOdometry():
         pose.t = t
         return pose, best_inliers
 
-    def compute_pose_3d2d(self, kp1, kp2, depth_1, segment_1):
+    def compute_pose_3d2d(self, kp1, kp2, depth_1):
         """Compute pose from 3d-2d correspondences
         Args:
             kp1 (Nx2 array): keypoints for view-1
@@ -779,8 +779,7 @@ class VisualOdometry():
                         = self.compute_pose_3d2d(
                                     cur_data[self.cfg.PnP.kp_src],
                                     ref_data[self.cfg.PnP.kp_src][ref_id],
-                                    ref_data['depth'][ref_id],
-                                    cur_data['mask']
+                                    ref_data['depth'][ref_id]
                                     ) # pose: from cur->ref
                     # use PnP pose instead of E-pose
                     hybrid_pose = pnp_pose
