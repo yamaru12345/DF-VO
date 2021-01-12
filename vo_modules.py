@@ -705,7 +705,7 @@ class VisualOdometry():
                                     kp_sel_method=self.cfg.deep_flow.kp_sel_method,
                                     forward_backward=forward_backward,
                                     dataset=self.cfg.dataset,
-                                    mask=self.cur_data['mask'][-1,...)  # maskのindex要変更!!
+                                    mask=self.cur_data['mask']  # maskのindex要変更!!
             
             # Save keypoints at current view
             kp_ref_best[i*batch_size:(i+1)*batch_size] = batch_kp_cur_best.copy() # each kp_ref_best saves best-N kp at cur-view
@@ -985,7 +985,6 @@ class VisualOdometry():
             
             # Reading mask
             mask = np.load(self.segment_path_dir+"/{:06d}.npy".format(img_id))
-            print('AA', mask.shape)
             self.cur_data['mask'] = mask
 
             # Reading/Predicting depth
