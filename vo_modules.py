@@ -70,6 +70,7 @@ class VisualOdometry():
                         'id': [],
                         'timestamp': {},
                         'img': {},
+                        'mask': {},
                         'depth': {},
                         'raw_depth': {},
                         'pose': {},
