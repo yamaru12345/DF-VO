@@ -361,10 +361,8 @@ class LiteFlow():
 
             # get best-N keypoints
             if kp_sel_method == "bestN":
+                flow_diff[mask.reshape(flow_diff.shape)] = 0
                 tmp_kp_list = np.where(flow_diff > 0)
-                print(len(tmp_kp_list))
-                tmp_kp_list = [kp for kp in tmp_kp_list if mask[kp[0], kp[1]]]
-                print(len(tmp_kp_list))
                 sel_list = np.argpartition(flow_diff[tmp_kp_list], N_best)[:N_best]
                 sel_kps = convert_idx_to_global_coord(sel_list, tmp_kp_list, [0, 0])
             elif kp_sel_method == "uniform_bestN":
