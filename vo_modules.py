@@ -252,7 +252,7 @@ class VisualOdometry():
                 depth_data_dir = None
                 
         # get segment data directory
-        img_seq_dir = os.path.join(
+        segment_dir = os.path.join(
                             self.cfg.directory.segment_dir,
                             self.cfg.seq
                             )
