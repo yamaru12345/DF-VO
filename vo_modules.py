@@ -334,9 +334,11 @@ class VisualOdometry():
         - Set drawer
         """
         # read camera intrinsics
+        h, w = self.cfg.image.height, self.cfg.image.width
+        f = max([h, w])
+        intrinsics_param = [w/2, h/2, f, f]
         #intrinsics_param = self.get_intrinsics_param(self.cfg.dataset)
-        #self.cam_intrinsics = Intrinsics(intrinsics_param)
-        self.cam_intrinsics = Intrinsics()
+        self.cam_intrinsics = Intrinsics(intrinsics_param)
 
         # get tracking method
         self.tracking_method = self.get_tracking_method(self.cfg.tracking_method)
