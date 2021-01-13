@@ -24,6 +24,8 @@ parser.add_argument("-c", "--configuration", type=str,
 parser.add_argument("-d", "--default_configuration", type=str,
                     default="options/kitti/kitti_default_configuration.yml",
                     help="default configuration files")
+parser.add_argument("-l", "--len", type=int,
+                    default=None)
 args = parser.parse_args()
 
 """ Read configuration """
