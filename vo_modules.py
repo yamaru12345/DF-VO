@@ -944,7 +944,7 @@ class VisualOdometry():
         # Synchronize rgb-d-pose pair
         #self.rgb_d_pose_pair = self.synchronize_rgbd_pose_pairs()
         #len_seq = len(self.rgb_d_pose_pair)
-        len_seq = 300
+        len_seq = 100
 
         # Main
         print("==> Start VO")
