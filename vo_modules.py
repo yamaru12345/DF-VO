@@ -775,6 +775,10 @@ class VisualOdometry():
                     )
                     if scale != -1:
                         hybrid_pose.t = E_pose.t * scale
+                        
+                print('frame:', self.tracking_stage)
+                print('E_pose.t:', E_pose.t)
+                print('scale:', scale)
 
                 # PnP if Essential matrix fail
                 if np.linalg.norm(E_pose.t) == 0 or scale == -1:
