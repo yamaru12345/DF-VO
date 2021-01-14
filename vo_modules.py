@@ -443,6 +443,7 @@ class VisualOdometry():
             avg_flow = np.mean(np.linalg.norm(kp_ref-kp_cur, axis=1))
             min_flow = valid_cfg.min_flow
             valid_case = avg_flow > min_flow
+        print(avg_flow, min_flow, valid_case) ###############################
         if valid_case:
             for i in range(max_ransac_iter): # repeat ransac for several times for stable result
                 # shuffle kp_cur and kp_ref (only useful when random seed is fixed)	
@@ -757,6 +758,9 @@ class VisualOdometry():
             for ref_id in self.ref_data['id']:
                 # Compose hybrid pose
                 hybrid_pose = SE3()
+                
+                print() #######################
+                print('frame:', self.tracking_stage)
 
                 # FIXME: add if statement for deciding which kp to use
                 # Essential matrix pose
@@ -767,9 +771,8 @@ class VisualOdometry():
                 # Rotation
                 hybrid_pose.R = E_pose.R
                 
-                print() #######################
-                print('frame:', self.tracking_stage)
-                print('E_pose.t:', E_pose.t)
+                
+                print('E_pose.t:', E_pose.t) ##############################
                 
                 # translation scale from triangulation v.s. CNN-depth
                 if np.linalg.norm(E_pose.t) != 0:
