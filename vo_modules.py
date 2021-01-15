@@ -484,7 +484,7 @@ class VisualOdometry():
                     
                     # check best inlier cnt
                     if valid_cfg.method == "flow+chei":
-                        inlier_check = inliers.sum() > best_inlier_cnt and cheirality_cnt > 50
+                        inlier_check = inliers.sum() > best_inlier_cnt and cheirality_cnt > 30  # 50
                     elif valid_cfg.method == "homo_ratio":
                         inlier_check = inliers.sum() > best_inlier_cnt
                     else:
