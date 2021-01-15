@@ -361,6 +361,8 @@ class LiteFlow():
 
             # get best-N keypoints
             if kp_sel_method == "bestN":
+                print(flow_diff.shape, mask.shape)
+                print(flow_diff[mask])
                 if mask != None:
                     flow_diff[mask] = 0
                 tmp_kp_list = np.where(flow_diff > 0)
