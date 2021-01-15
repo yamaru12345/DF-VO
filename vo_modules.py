@@ -70,6 +70,7 @@ class VisualOdometry():
                         'id': [],
                         'timestamp': {},
                         'img': {},
+                        'mask': {},
                         'depth': {},
                         'raw_depth': {},
                         'pose': {},
@@ -85,6 +86,7 @@ class VisualOdometry():
                         'id': 0,
                         'timestamp': 0,
                         'img': np.zeros(1),
+                        'mask': np.zeros(1),
                         'depth': np.zeros(1),
                         'pose': np.eye(4),
                         'kp': np.zeros(1),
@@ -987,6 +989,10 @@ class VisualOdometry():
             img_h, img_w, _ = image_shape(img)
             self.cur_data['img'] = img
             self.timers.timers["img_reading"].append(time()-start_time)
+            
+            # Reading mask
+            mask = np.load(self.img_path_dir+"/{:06d}.npy".format(img_id)
+            self.cur_data['mask'] = mask
            
             # Reading/Predicting depth
             if self.depth_src is not None:
