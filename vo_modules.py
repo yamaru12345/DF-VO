@@ -1025,10 +1025,10 @@ class VisualOdometry():
             )
             
             ##################################
-            with open(f'kp_{img_id}.txt', 'w') as f:
-                for _kp in self.cur_data['kp']:
-                    print(_kp)
-                    f.write(_kp[0], _kp[1] + '\n')
+            import pickle
+            with open(f'kp_{img_id}.pkl', 'w') as f:
+                pickle.dump(self.cur_data['kp'])
+
 
         print("=> Finish!")
         """ Display & Save result """
