@@ -695,7 +695,6 @@ class VisualOdometry():
         batch_size = self.cfg.deep_flow.batch_size
         num_forward = int(np.ceil(len(ref_data['id']) / batch_size))
         mask = cur_data['mask'] + ref_data['mask'][ref_data['id'][0]]
-        print(mask, mask.shape)
         for i in range(num_forward):
             # Read precomputed flow / real-time flow
             batch_kp_ref_best, batch_kp_cur_best, batch_kp_ref_regular, batch_kp_cur_regular, batch_flows = flow_net_tracking(
