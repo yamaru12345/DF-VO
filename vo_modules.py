@@ -239,7 +239,7 @@ class VisualOdometry():
             if depth_src == "gt":
                 depth_data_dir = "{}/gt/{}/".format(
                                     self.cfg.directory.depth_dir, self.cfg.seq
-                                )
+                                    )
             elif depth_src is None:
                 depth_data_dir = None
         elif "tum" in self.cfg.dataset:
@@ -250,7 +250,12 @@ class VisualOdometry():
             elif depth_src is None:
                 depth_data_dir = None
         
-        return img_data_dir, depth_data_dir, depth_src
+        # get mask data directory
+        mask_data_dir = "{}/gt/{}/".format(
+                                    self.cfg.directory.mask_dir, self.cfg.seq
+                                    )
+        
+        return img_data_dir, depth_data_dir, depth_src, mask_data_dir
 
     def generate_kp_samples(self, img_h, img_w, crop, N):
         """generate keypoint samples according to image height, width
@@ -349,7 +354,7 @@ class VisualOdometry():
                                             )
 
         # get image and depth data directory
-        self.img_path_dir, self.depth_seq_dir, self.depth_src = self.get_img_depth_dir()
+        self.img_path_dir, self.depth_seq_dir, self.depth_src, self.mask_dir = self.get_img_depth_dir()
 
         # generate keypoint sampling scheme
         self.uniform_kp_list = None
