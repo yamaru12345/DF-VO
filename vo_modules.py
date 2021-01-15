@@ -43,6 +43,7 @@ class VisualOdometry():
 
         # configuration
         self.cfg = cfg
+        print(cfg)
 
         # window size and keyframe step
         self.window_size = 2
