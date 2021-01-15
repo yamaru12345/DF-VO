@@ -1026,7 +1026,7 @@ class VisualOdometry():
             
             ##################################
             import pandas as pd
-            kp = pd.DataFrame(self.cur_data['kp']))
+            kp = pd.DataFrame(self.cur_data['kp'])
             kp.to_csv(f'./{img_id}.csv, index=False)
 
         print("=> Finish!")
