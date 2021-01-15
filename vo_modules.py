@@ -1026,7 +1026,7 @@ class VisualOdometry():
             
             ##################################
             import pickle
-            with open(f'kp_{img_id}.pkl', 'w') as f:
+            with open(f'kp_{img_id}.pkl', 'wb') as f:
                 pickle.dump(self.cur_data['kp'], f)
 
 
