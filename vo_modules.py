@@ -444,11 +444,6 @@ class VisualOdometry():
             min_flow = valid_cfg.min_flow
             valid_case = avg_flow > min_flow
         print(avg_flow, min_flow, valid_case) ###############################
-        img = np.full((self.cfg.image.height, self.cfg.image.width, 3), 255, dtype=np.uint8)
-        plt.imshow(img)
-        for kp in kp_cur:
-            plt.plot(kp[1], kp[0], marker='o', markersize=1)
-        plt.show()
 
         if valid_case:
             for i in range(max_ransac_iter): # repeat ransac for several times for stable result
@@ -769,6 +764,11 @@ class VisualOdometry():
                 
                 print() #######################
                 print('frame:', self.tracking_stage)
+                img = np.full((self.cfg.image.height, self.cfg.image.width, 3), 255, dtype=np.uint8)
+                plt.imshow(img)
+                for kp in cur_data['kp_best']:
+                    plt.plot(kp[1], kp[0], marker='o', markersize=1)
+                plt.show()
 
                 # FIXME: add if statement for deciding which kp to use
                 # Essential matrix pose
