@@ -253,7 +253,7 @@ class VisualOdometry():
                 depth_data_dir = None
         
         # get mask data directory
-        mask_data_dir = "{}/gt/{}/".format(
+        mask_data_dir = "{}/{}/".format(
                                     self.cfg.directory.mask_dir, self.cfg.seq
                                     )
         
