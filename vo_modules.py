@@ -448,6 +448,7 @@ class VisualOdometry():
         plt.imshow(img)
         for kp in kp_cur:
             plt.plot(kp[1], kp[0], marker='o', markersize=1)
+        plt.show()
 
         if valid_case:
             for i in range(max_ransac_iter): # repeat ransac for several times for stable result
