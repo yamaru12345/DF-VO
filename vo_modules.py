@@ -680,7 +680,9 @@ class VisualOdometry():
             ref_imgs = [ref_data['timestamp'][idx] for idx in ref_data['id']]
             cur_imgs = [cur_data['timestamp'] for i in ref_data['timestamp']]
             
-        print('AAAA', cur_data, ref_data, cur_imgs, ref_imgs)
+        print('cur', cur_imgs)
+        print()
+        print('ref', ref_imgs)
 
         # Regular sampling
         kp_list_regular = self.uniform_kp_list
