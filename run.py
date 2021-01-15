@@ -57,7 +57,7 @@ vo = VO(cfg)
 vo.setup()
 #vo.main()
 kp = vo.main
-print(kp)
+print(kp[0])
 
 # Save configuration file
 cfg_path = os.path.join(cfg.result_dir, "configuration_{}.yml".format(cfg.seq))
