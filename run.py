@@ -36,6 +36,8 @@ cfg = merge_cfg(config_files)
 if args.seq is not None:
     cfg.seq = args.seq
 cfg.seq = str(cfg.seq)
+if args.seq_length is not None:
+    cfg.seq_length = args.seq_length
 
 # Double check result directory
 #continue_flag = input("Save result in {}? [y/n]".format(cfg.result_dir))
