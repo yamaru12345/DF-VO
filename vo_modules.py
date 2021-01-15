@@ -1023,8 +1023,9 @@ class VisualOdometry():
                                     self.window_size,
                                     self.keyframe_step
             )
-            #################
-            kp_out.append(self.cur_data['kp'])
+            
+            ##################################
+            print(self.cur_data['kp'])
 
         print("=> Finish!")
         """ Display & Save result """
@@ -1049,5 +1050,3 @@ class VisualOdometry():
             timestamps = sorted(list(self.rgb_d_pose_pair.keys()))
             global_poses_arr = convert_SE3_to_arr(self.global_poses, timestamps)
             save_traj(traj_txt, global_poses_arr, format="tum")
-            
-        return kp_out
