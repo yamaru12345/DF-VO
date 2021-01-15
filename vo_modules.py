@@ -444,6 +444,11 @@ class VisualOdometry():
             min_flow = valid_cfg.min_flow
             valid_case = avg_flow > min_flow
         print(avg_flow, min_flow, valid_case) ###############################
+        img = np.full((h, w, 3), 255, dtype=np.uint8)
+        plt.imshow(img)
+        for kp in kp_cur:
+            plt.plot(kp[1], kp[0], marker='o', markersize=1)
+
         if valid_case:
             for i in range(max_ransac_iter): # repeat ransac for several times for stable result
                 # shuffle kp_cur and kp_ref (only useful when random seed is fixed)	
