@@ -694,6 +694,7 @@ class VisualOdometry():
         flow_net_tracking = self.deep_models['flow'].inference_kp
         batch_size = self.cfg.deep_flow.batch_size
         num_forward = int(np.ceil(len(ref_data['id']) / batch_size))
+        mask = ref_data['mask'] + cur_data['mask']
         for i in range(num_forward):
             # Read precomputed flow / real-time flow
             batch_kp_ref_best, batch_kp_cur_best, batch_kp_ref_regular, batch_kp_cur_regular, batch_flows = flow_net_tracking(
@@ -706,7 +707,8 @@ class VisualOdometry():
                                     N_best=num_kp_best,
                                     kp_sel_method=self.cfg.deep_flow.kp_sel_method,
                                     forward_backward=forward_backward,
-                                    dataset=self.cfg.dataset)
+                                    dataset=self.cfg.dataset,
+                                    mask=mask)
             
             # Save keypoints at current view
             kp_ref_best[i*batch_size:(i+1)*batch_size] = batch_kp_cur_best.copy() # each kp_ref_best saves best-N kp at cur-view
