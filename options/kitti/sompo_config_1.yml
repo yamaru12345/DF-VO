@@ -21,7 +21,7 @@ tracking_method: 3
 compute_2d2d_pose:
   ransac:
     reproj_thre: 0.2
-    repeat: 5
+    repeat: 30  # 5
   validity:
     method: flow+chei
     min_flow: 1  # 5 
