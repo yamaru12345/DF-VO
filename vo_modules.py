@@ -43,7 +43,6 @@ class VisualOdometry():
 
         # configuration
         self.cfg = cfg
-        print(cfg)
 
         # window size and keyframe step
         self.window_size = 2
@@ -967,6 +966,13 @@ class VisualOdometry():
 
         # Main
         print("==> Start VO")
+        
+        ###########################
+        img = np.full((self.cfg.image.height, self.cfg.image.width, 3), 255, dtype=np.uint8)
+        plt.imshow(img)
+        plt.show()
+
+                
         main_start_time = time()
         #start_frame = int(input("Start with frame: "))
         start_frame = 0
