@@ -443,7 +443,6 @@ class VisualOdometry():
             avg_flow = np.mean(np.linalg.norm(kp_ref-kp_cur, axis=1))
             min_flow = valid_cfg.min_flow
             valid_case = avg_flow > min_flow
-        print(avg_flow, min_flow, valid_case) ###############################
 
         if valid_case:
             for i in range(max_ransac_iter): # repeat ransac for several times for stable result
@@ -490,9 +489,7 @@ class VisualOdometry():
                         inlier_check = inliers.sum() > best_inlier_cnt
                     else:
                         assert False, "wrong cfg for compute_2d2d_pose.validity.method"
-                    
-                    print('inlier_check:', inlier_check, inliers.sum(), best_inlier_cnt, cheirality_cnt)
-                    
+                                      
                     if inlier_check:
                         best_Rt = [R, t]
                         best_inlier_cnt = inliers.sum()
@@ -762,14 +759,6 @@ class VisualOdometry():
                 # Compose hybrid pose
                 hybrid_pose = SE3()
                 
-                print() #######################
-                print('frame:', self.tracking_stage)
-                img = np.full((self.cfg.image.height, self.cfg.image.width, 3), 255, dtype=np.uint8)
-                plt.imshow(img)
-                for kp in cur_data['kp_best']:
-                    plt.plot(kp[1], kp[0], marker='o', markersize=1)
-                plt.show()
-
                 # FIXME: add if statement for deciding which kp to use
                 # Essential matrix pose
                 E_pose, _ = self.compute_pose_2d2d(
@@ -778,9 +767,6 @@ class VisualOdometry():
 
                 # Rotation
                 hybrid_pose.R = E_pose.R
-                
-                
-                print('E_pose.t:', E_pose.t) ##############################
                 
                 # translation scale from triangulation v.s. CNN-depth
                 if np.linalg.norm(E_pose.t) != 0:
@@ -791,9 +777,6 @@ class VisualOdometry():
                     if scale != -1:
                         hybrid_pose.t = E_pose.t * scale
                         
-                    print('scale:', scale) #####################               
-                print()
-
                 # PnP if Essential matrix fail
                 if np.linalg.norm(E_pose.t) == 0 or scale == -1:
                     pnp_pose, _, _ \
@@ -966,17 +949,15 @@ class VisualOdometry():
 
         # Main
         print("==> Start VO")
-        
-        ###########################
-        img = np.full((self.cfg.image.height, self.cfg.image.width, 3), 255, dtype=np.uint8)
-        plt.imshow(img)
-        plt.show()
-
-                
+                       
         main_start_time = time()
         #start_frame = int(input("Start with frame: "))
         start_frame = 0
-
+        
+        #################
+        kp_out = []
+        #################
+        
         for img_id in tqdm(range(start_frame, len_seq)):
             self.tracking_mode = "Ess. Mat."
 
@@ -1042,6 +1023,8 @@ class VisualOdometry():
                                     self.window_size,
                                     self.keyframe_step
             )
+            #################
+            kp_out.append(self.cur_data['kp'])
 
         print("=> Finish!")
         """ Display & Save result """
@@ -1066,3 +1049,5 @@ class VisualOdometry():
             timestamps = sorted(list(self.rgb_d_pose_pair.keys()))
             global_poses_arr = convert_SE3_to_arr(self.global_poses, timestamps)
             save_traj(traj_txt, global_poses_arr, format="tum")
+            
+        return kp_out
