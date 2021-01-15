@@ -1027,7 +1027,8 @@ class VisualOdometry():
             ##################################
             with open(f'kp_{img_id}.txt', 'w') as f:
                 for _kp in self.cur_data['kp']:
-                    f.write(_kp + '\n')
+                    print(_kp)
+                    f.write(_kp, '\n')
 
         print("=> Finish!")
         """ Display & Save result """
