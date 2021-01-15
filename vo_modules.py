@@ -444,7 +444,7 @@ class VisualOdometry():
             min_flow = valid_cfg.min_flow
             valid_case = avg_flow > min_flow
         print(avg_flow, min_flow, valid_case) ###############################
-        img = np.full((h, w, 3), 255, dtype=np.uint8)
+        img = np.full((self.cfg.image.height, self.cfg.image.width, 3), 255, dtype=np.uint8)
         plt.imshow(img)
         for kp in kp_cur:
             plt.plot(kp[1], kp[0], marker='o', markersize=1)
