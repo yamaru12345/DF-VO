@@ -24,7 +24,7 @@ compute_2d2d_pose:
     repeat: 5
   validity:
     method: flow+chei
-    min_flow: 2  # 5 
+    min_flow: 1  # 5 
 
 PnP:
   ransac:
