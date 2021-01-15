@@ -475,6 +475,8 @@ class VisualOdometry():
                                 )
                     H_inliers_ratio = H_inliers.sum()/(H_inliers.sum()+inliers.sum())
                     valid_case = H_inliers_ratio < 0.25
+                    
+                    print('Homo:', valid_case)
                 
                 if valid_case:
                     cheirality_cnt, R, t, _ = cv2.recoverPose(E, new_kp_cur, new_kp_ref,
@@ -489,6 +491,8 @@ class VisualOdometry():
                         inlier_check = inliers.sum() > best_inlier_cnt
                     else:
                         assert False, "wrong cfg for compute_2d2d_pose.validity.method"
+                    
+                    print('inlier_check:', inlier_check)
                     
                     if inlier_check:
                         best_Rt = [R, t]
