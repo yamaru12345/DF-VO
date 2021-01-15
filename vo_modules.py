@@ -1015,7 +1015,11 @@ class VisualOdometry():
             start_time = time()
             self=self.drawer.main(self)
             self.timers.timers["visualization"].append(time()-start_time)
-
+            
+            ##################################
+            kp_out.append({'kp': self.cur_data['kp'], 'mode': self.tracking_mode})
+            ##################################
+            
             """ Update reference and current data """
             self.ref_data, self.cur_data = self.update_ref_data(
                                     self.ref_data,
@@ -1024,11 +1028,11 @@ class VisualOdometry():
                                     self.keyframe_step
             )
             
-            ##################################
-            import pickle
-            with open(f'kp_{img_id}.pkl', 'wb') as f:
-                pickle.dump(self.cur_data['kp'], f)
-
+        ##################################
+        import pickle
+        with open(f'kp.pkl', 'wb') as f:
+            pickle.dump(kp_out, f)
+        ##################################
 
         print("=> Finish!")
         """ Display & Save result """
