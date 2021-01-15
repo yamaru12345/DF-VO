@@ -459,7 +459,7 @@ class VisualOdometry():
                             focal=self.cam_intrinsics.fx,
                             pp=principal_points,
                             method=cv2.RANSAC,
-                            prob=0.99,
+                            prob=0.999,
                             threshold=self.cfg.compute_2d2d_pose.ransac.reproj_thre,
                             )
                 
