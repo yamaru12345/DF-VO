@@ -47,8 +47,8 @@ translation_scale:
 # ----------------------------------------------------------------------------
 depth:
   depth_src:  # (blank: deep model inference; 0: GT depth)
-  max_depth: 70
-  min_depth: 10
+  max_depth: 50
+  min_depth: 15
   pretrained_model: model_zoo/depth/kitti_odom/stereo/
 
 # ----------------------------------------------------------------------------
