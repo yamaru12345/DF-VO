@@ -55,8 +55,11 @@ np.random.seed(SEED)
 """ Main """
 vo = VO(cfg)
 vo.setup()
-vo.main()
+#vo.main()
+kp = vo.main
 
 # Save configuration file
 cfg_path = os.path.join(cfg.result_dir, "configuration_{}.yml".format(cfg.seq))
 save_cfg(config_files, file_path=cfg_path)
+
+return kp
