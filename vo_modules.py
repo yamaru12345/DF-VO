@@ -680,10 +680,6 @@ class VisualOdometry():
             ref_imgs = [ref_data['timestamp'][idx] for idx in ref_data['id']]
             cur_imgs = [cur_data['timestamp'] for i in ref_data['timestamp']]
             
-        print('cur', cur_imgs)
-        print()
-        print('ref', ref_imgs)
-
         # Regular sampling
         kp_list_regular = self.uniform_kp_list
         kp_ref_regular = np.zeros((len(ref_data['id']), len(kp_list_regular), 2))
@@ -698,7 +694,8 @@ class VisualOdometry():
         flow_net_tracking = self.deep_models['flow'].inference_kp
         batch_size = self.cfg.deep_flow.batch_size
         num_forward = int(np.ceil(len(ref_data['id']) / batch_size))
-        mask = cur_data['mask']
+        mask = cur_data['mask'] + ref_data['mask'][ref_data['id'][0]]
+        print(mask, mask.shape)
         for i in range(num_forward):
             # Read precomputed flow / real-time flow
             batch_kp_ref_best, batch_kp_cur_best, batch_kp_ref_regular, batch_kp_cur_regular, batch_flows = flow_net_tracking(
