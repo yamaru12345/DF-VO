@@ -28,9 +28,9 @@ compute_2d2d_pose:
 
 PnP:
   ransac:
-    iter: 1000
+    iter: 10000  # 1000
     reproj_thre: 1
-    repeat: 5
+    repeat: 10  # 5
   kp_src: kp_best # [kp_list, kp_best]
 
 # translation scale
