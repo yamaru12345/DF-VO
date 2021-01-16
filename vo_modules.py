@@ -544,7 +544,7 @@ class VisualOdometry():
         valid_kp_mask = non_zero_mask * depth_range_mask
 
         kp1 = kp1[valid_kp_mask]
-        kp2 = kp2[valid_kp_mask]
+        #kp2 = kp2[valid_kp_mask]
 
         # Get 3D coordinates for kp1
         XYZ_kp1 = unprojection_kp(kp1, kp_depths[valid_kp_mask], self.cam_intrinsics)
@@ -554,6 +554,7 @@ class VisualOdometry():
         non_zero_mask = (kp_depths != 0)
         depth_range_mask = (kp_depths < self.cfg.depth.max_depth) * (kp_depths > self.cfg.depth.min_depth)
         valid_kp_mask = non_zero_mask * depth_range_mask
+        kp2 = kp2[valid_kp_mask]
         XYZ_kp2 = unprojection_kp(kp2, kp_depths[valid_kp_mask], self.cam_intrinsics)
         print(XYZ_kp1.shape, XYZ_kp2.shape, (XYZ_kp1 - XYZ_kp2).shape)
         ##############
