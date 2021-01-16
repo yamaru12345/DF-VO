@@ -515,7 +515,7 @@ class VisualOdometry():
         pose.t = t
         return pose, best_inliers
 
-    def compute_pose_3d2d(self, kp1, kp2, depth_1):
+    def compute_pose_3d2d(self, kp1, kp2, depth_1, depth_2):
         """Compute pose from 3d-2d correspondences
         Args:
             kp1 (Nx2 array): keypoints for view-1
@@ -548,7 +548,16 @@ class VisualOdometry():
 
         # Get 3D coordinates for kp1
         XYZ_kp1 = unprojection_kp(kp1, kp_depths[valid_kp_mask], self.cam_intrinsics)
-
+        ##############
+        kp2_int = kp2.astype(np.int)
+        kp_depths = depth_2[kp2_int[:, 1], kp2_int[:, 0]]
+        non_zero_mask = (kp_depths != 0)
+        depth_range_mask = (kp_depths < self.cfg.depth.max_depth) * (kp_depths > self.cfg.depth.min_depth)
+        valid_kp_mask = non_zero_mask * depth_range_mask
+        XYZ_kp2 = unprojection_kp(kp2, kp_depths[valid_kp_mask], self.cam_intrinsics)
+        print(XYZ_kp1.shape, XYZ_kp2.shape, (XYZ_kp1 - XYZ_kp2).shape
+        ##############
+        
         # initialize ransac setup
         best_rt = []
         best_inlier = 0
@@ -792,7 +801,8 @@ class VisualOdometry():
                         = self.compute_pose_3d2d(
                                     cur_data[self.cfg.PnP.kp_src],
                                     ref_data[self.cfg.PnP.kp_src][ref_id],
-                                    ref_data['depth'][ref_id]
+                                    ref_data['depth'][ref_id],
+                                    cur_data['depth']
                                     ) # pose: from cur->ref
                     # use PnP pose instead of E-pose
                     hybrid_pose = pnp_pose
