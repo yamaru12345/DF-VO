@@ -559,7 +559,6 @@ class VisualOdometry():
         XYZ_kp1 = unprojection_kp(kp1, kp_depths[valid_kp_mask], self.cam_intrinsics)
         ##############
         XYZ_kp2 = unprojection_kp(kp2, kp_depths[valid_kp_mask], self.cam_intrinsics)
-        print(XYZ_kp1.shape, XYZ_kp2.shape, (XYZ_kp2 - XYZ_kp1).shape, (XYZ_kp2 - XYZ_kp1).mean(axis=0).shape)
         ##############
         
         # initialize ransac setup
@@ -591,6 +590,9 @@ class VisualOdometry():
             r, t = best_rt
             pose.R = cv2.Rodrigues(r)[0]
             pose.t = t
+            ##############
+            pose.t = (XYZ_kp2 - XYZ_kp1).mean(axis=0)
+            ##############
         pose.pose = pose.inv_pose
         return pose, kp1, kp2
 
