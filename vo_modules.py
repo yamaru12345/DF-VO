@@ -592,6 +592,8 @@ class VisualOdometry():
             pose.t = t
             ##############
             t = XYZ_kp1 - XYZ_kp2
+            with open(f'./{self.cur_data['id']}.txt', 'w') as f:
+                f.write(t)
             pose.t = t[t[:, 2] < 0].mean(axis=0).reshape(3, 1)
             ##############
         pose.pose = pose.inv_pose
