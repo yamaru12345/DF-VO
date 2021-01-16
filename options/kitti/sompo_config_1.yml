@@ -24,7 +24,7 @@ compute_2d2d_pose:
     repeat: 10  # 5
   validity:
     method: flow+chei
-    min_flow: 100  # 5 
+    min_flow: 2  # 5 
 
 PnP:
   ransac:
@@ -40,7 +40,7 @@ translation_scale:
     max_trials: 100
     stop_prob: 0.999
     thre: 1
-  kp_src: kp_list # [kp_list, kp_best]
+  kp_src: kp_best # [kp_list, kp_best]
 
 # ----------------------------------------------------------------------------
 # Deep single-view depth
