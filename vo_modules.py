@@ -595,6 +595,7 @@ class VisualOdometry():
             t = t[t[:, 2] < 0]
             norms = np.linalg.norm(t, axis=1)
             p25, p75 = np.percentile(norms, [25, 75])
+            print(t.shape, t[(norms >= p25) * (norms <= p75)].shape) 
             pose.t =  t[(norms >= p25) * (norms <= p75)].mean(axis=0).reshape(3, 1)
             ##############
         pose.pose = pose.inv_pose
