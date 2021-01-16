@@ -592,8 +592,10 @@ class VisualOdometry():
             pose.t = t
             ##############
             t = XYZ_kp1 - XYZ_kp2
-            np.save(f'./{self.cur_data["id"]}.npy', t)
-            pose.t = t[t[:, 2] < 0].mean(axis=0).reshape(3, 1)
+            t = t[t[:, 2] < 0]
+            norms = np.linalg.norm(t, axis=1)
+            p25, p75 = np.percentile(norms, [25, 75])
+            pose.t =  t[(norms >= p25) * (norms <= p75)].mean(axis=0).reshape(3, 1)
             ##############
         pose.pose = pose.inv_pose
         return pose, kp1, kp2
