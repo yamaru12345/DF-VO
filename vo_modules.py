@@ -549,16 +549,17 @@ class VisualOdometry():
         non_zero_mask = (kp_depths2 != 0)
         depth_range_mask = (kp_depths2 < self.cfg.depth.max_depth) * (kp_depths2 > self.cfg.depth.min_depth)
         valid_kp_mask2 = non_zero_mask * depth_range_mask
-        valid_kp_mask = valid_kp_mask1 * valid_kp_mask2 
+        #valid_kp_mask = valid_kp_mask1 * valid_kp_mask2 
         ##############
-
+        
+        valid_kp_mask = valid_kp_mask1
         kp1 = kp1[valid_kp_mask]
         kp2 = kp2[valid_kp_mask]
 
         # Get 3D coordinates for kp1
         XYZ_kp1 = unprojection_kp(kp1, kp_depths1[valid_kp_mask], self.cam_intrinsics)
         ##############
-        XYZ_kp2 = unprojection_kp(kp2, kp_depths2[valid_kp_mask], self.cam_intrinsics)
+        #XYZ_kp2 = unprojection_kp(kp2, kp_depths2[valid_kp_mask], self.cam_intrinsics)
         ##############
         
         # initialize ransac setup
