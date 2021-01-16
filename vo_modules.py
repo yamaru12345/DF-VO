@@ -538,16 +538,16 @@ class VisualOdometry():
 
         # Filter keypoints outside depth range
         kp1_int = kp1.astype(np.int)
-        kp_depths = depth_1[kp1_int[:, 1], kp1_int[:, 0]]
-        non_zero_mask = (kp_depths != 0)
-        depth_range_mask = (kp_depths < self.cfg.depth.max_depth) * (kp_depths > self.cfg.depth.min_depth)
+        kp_depths1 = depth_1[kp1_int[:, 1], kp1_int[:, 0]]
+        non_zero_mask = (kp_depths1 != 0)
+        depth_range_mask = (kp_depths1 < self.cfg.depth.max_depth) * (kp_depths1 > self.cfg.depth.min_depth)
         valid_kp_mask1 = non_zero_mask * depth_range_mask
         
         ##############
         kp2_int = kp2.astype(np.int)
-        kp_depths = depth_2[kp2_int[:, 1], kp2_int[:, 0]]
-        non_zero_mask = (kp_depths != 0)
-        depth_range_mask = (kp_depths < self.cfg.depth.max_depth) * (kp_depths > self.cfg.depth.min_depth)
+        kp_depths2 = depth_2[kp2_int[:, 1], kp2_int[:, 0]]
+        non_zero_mask = (kp_depths2 != 0)
+        depth_range_mask = (kp_depths2 < self.cfg.depth.max_depth) * (kp_depths2 > self.cfg.depth.min_depth)
         valid_kp_mask2 = non_zero_mask * depth_range_mask
         valid_kp_mask = valid_kp_mask1 * valid_kp_mask2 
         ##############
@@ -556,9 +556,9 @@ class VisualOdometry():
         kp2 = kp2[valid_kp_mask]
 
         # Get 3D coordinates for kp1
-        XYZ_kp1 = unprojection_kp(kp1, kp_depths[valid_kp_mask], self.cam_intrinsics)
+        XYZ_kp1 = unprojection_kp(kp1, kp_depths1[valid_kp_mask], self.cam_intrinsics)
         ##############
-        XYZ_kp2 = unprojection_kp(kp2, kp_depths[valid_kp_mask], self.cam_intrinsics)
+        XYZ_kp2 = unprojection_kp(kp2, kp_depths2[valid_kp_mask], self.cam_intrinsics)
         ##############
         
         # initialize ransac setup
