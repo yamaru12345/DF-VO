@@ -591,8 +591,8 @@ class VisualOdometry():
             pose.R = cv2.Rodrigues(r)[0]
             pose.t = t
             ##############
-            t = XYZ_kp2 - XYZ_kp1
-            pose.t = t[t[:, 2] > 0].mean(axis=0).reshape(3, 1)
+            t = XYZ_kp1 - XYZ_kp2
+            pose.t = t[t[:, 2] < 0].mean(axis=0).reshape(3, 1)
             ##############
         pose.pose = pose.inv_pose
         return pose, kp1, kp2
