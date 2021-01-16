@@ -784,7 +784,8 @@ class VisualOdometry():
                         E_pose.inv_pose, self.cur_data['depth']
                     )
                     if scale != -1:
-                        hybrid_pose.t = E_pose.t * scale
+                        #hybrid_pose.t = E_pose.t * scale
+                        hybrid_pose.t = E_pose.t
                         
                 # PnP if Essential matrix fail
                 if np.linalg.norm(E_pose.t) == 0 or scale == -1:
