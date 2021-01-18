@@ -37,6 +37,7 @@ class VisualOdometry():
 
         # predicted global poses
         self.global_poses = {0: SE3()}
+        self.global_poses_pnp = {0: SE3()}
 
         # tracking stage
         self.tracking_stage = 0
@@ -74,6 +75,7 @@ class VisualOdometry():
                         'depth': {},
                         'raw_depth': {},
                         'pose': {},
+                        'pose_pnp': {},
                         'kp': {},
                         'kp_best': {},
                         'kp_list': {},
@@ -89,6 +91,7 @@ class VisualOdometry():
                         'mask': np.zeros(1),
                         'depth': np.zeros(1),
                         'pose': np.eye(4),
+                        'pose_pnp': np.eye(4),
                         'kp': np.zeros(1),
                         'kp_best': np.zeros(1),
                         'kp_list': np.zeros(1),
@@ -604,7 +607,7 @@ class VisualOdometry():
         pose.pose = pose.inv_pose
         return pose, kp1, kp2
 
-    def update_global_pose(self, new_pose, scale):
+    def update_global_pose(self, new_pose, new_pose_pnp, scale):
         """update estimated poses w.r.t global coordinate system
         Args:
             new_pose (SE3)
@@ -614,7 +617,12 @@ class VisualOdometry():
                             + self.cur_data['pose'].t
         self.cur_data['pose'].R = self.cur_data['pose'].R @ new_pose.R
         self.global_poses[self.cur_data['id']] = copy.deepcopy(self.cur_data['pose'])
-
+        
+        self.cur_data['pose_pnp'].t = self.cur_data['pose_pnp'].R @ new_pose.t * scale \
+                            + self.cur_data['pose_pnp'].t
+        self.cur_data['pose_pnp'].R = self.cur_data['pose_pnp'].R @ new_pose.R
+        self.global_poses_pnp[self.cur_data['id']] = copy.deepcopy(self.cur_data['pose_pnp'])
+        
     def find_scale_from_depth(self, kp1, kp2, T_21, depth2):
         """Compute VO scaling factor for T_21
         Args:
@@ -790,6 +798,7 @@ class VisualOdometry():
             for ref_id in self.ref_data['id']:
                 # Compose hybrid pose
                 hybrid_pose = SE3()
+                hybrid_pose_pnp = SE3()
                 
                 # FIXME: add if statement for deciding which kp to use
                 # Essential matrix pose
@@ -798,6 +807,7 @@ class VisualOdometry():
                                 ref_data['kp_best'][ref_id]) # pose: from cur->ref
 
                 # Rotation
+                """
                 hybrid_pose.R = E_pose.R
                 
                 # translation scale from triangulation v.s. CNN-depth
@@ -807,11 +817,14 @@ class VisualOdometry():
                         E_pose.inv_pose, self.cur_data['depth']
                     )
                     if scale != -1:
-                        #hybrid_pose.t = E_pose.t * scale
-                        hybrid_pose.t = E_pose.t #####################################################
-                        
+                        hybrid_pose.t = E_pose.t * scale
+                """
+                if np.linalg.norm(E_pose.t) != 0:
+                    hybrid_pose = E_pose
+                
                 # PnP if Essential matrix fail
-                if np.linalg.norm(E_pose.t) == 0 or scale == -1:
+                #if np.linalg.norm(E_pose.t) == 0 or scale == -1:
+                else:
                     pnp_pose, _, _ \
                         = self.compute_pose_3d2d(
                                     cur_data[self.cfg.PnP.kp_src],
