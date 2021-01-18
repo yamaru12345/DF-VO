@@ -838,7 +838,7 @@ class VisualOdometry():
                 
                 ref_data['pose'][ref_id] = copy.deepcopy(hybrid_pose)
                 ref_data['pose_pnp'][ref_id] = copy.deepcopy(hybrid_pose_pnp)
-                print(hybrid_pose, hybrid_pose_pnp)
+                print(hybrid_pose.t, hybrid_pose_pnp.t)
                 # ref_data['pose'][ref_id] = hybrid_pose
 
             self.ref_data = copy.deepcopy(ref_data)
