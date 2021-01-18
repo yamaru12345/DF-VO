@@ -494,7 +494,7 @@ class VisualOdometry():
                     
                     # check best inlier cnt
                     if valid_cfg.method == "flow+chei":
-                        inlier_check = inliers.sum() > best_inlier_cnt and cheirality_cnt > 30  # 50
+                        inlier_check = inliers.sum() > best_inlier_cnt and cheirality_cnt > 0  # 50
                     elif valid_cfg.method == "homo_ratio":
                         inlier_check = inliers.sum() > best_inlier_cnt
                     else:
@@ -824,18 +824,19 @@ class VisualOdometry():
                 
                 # PnP if Essential matrix fail
                 #if np.linalg.norm(E_pose.t) == 0 or scale == -1:
-                else:
-                    pnp_pose, _, _ \
-                        = self.compute_pose_3d2d(
-                                    cur_data[self.cfg.PnP.kp_src],
-                                    ref_data[self.cfg.PnP.kp_src][ref_id],
-                                    ref_data['depth'][ref_id],
-                                    cur_data['depth']
-                                    ) # pose: from cur->ref
-                    # use PnP pose instead of E-pose
-                    hybrid_pose = pnp_pose
-                    self.tracking_mode = "PnP"
+                pnp_pose, _, _ \
+                    = self.compute_pose_3d2d(
+                                cur_data[self.cfg.PnP.kp_src],
+                                ref_data[self.cfg.PnP.kp_src][ref_id],
+                                ref_data['depth'][ref_id],
+                                cur_data['depth']
+                                ) # pose: from cur->ref
+                # use PnP pose instead of E-pose
+                hybrid_pose_pnp = pnp_pose
+                self.tracking_mode = "PnP"
+                
                 ref_data['pose'][ref_id] = copy.deepcopy(hybrid_pose)
+                ref_data['pose_pnp'][ref_id] = copy.deepcopy(hybrid_pose_pnp)
                 # ref_data['pose'][ref_id] = hybrid_pose
 
             self.ref_data = copy.deepcopy(ref_data)
@@ -847,7 +848,8 @@ class VisualOdometry():
             
             # update global poses
             pose = self.ref_data['pose'][self.ref_data['id'][-1]]
-            self.update_global_pose(pose, 1)
+            pose_pnp = self.ref_data['pose_pnp'][self.ref_data['id'][-1]]
+            self.update_global_pose(pose, pose_pnp, 1)
 
             self.tracking_stage += 1
             del(ref_data)
@@ -1101,9 +1103,12 @@ class VisualOdometry():
 
         # Save trajectory txt
         traj_txt = "{}/{}.txt".format(self.cfg.result_dir, self.cfg.seq)
+        traj_txt_pnp = "{}/{}_pnp.txt".format(self.cfg.result_dir, self.cfg.seq)
         if self.cfg.dataset == "kitti":
             global_poses_arr = convert_SE3_to_arr(self.global_poses)
+            global_poses_arr_pnp = convert_SE3_to_arr(self.global_poses_pnp)
             save_traj(traj_txt, global_poses_arr, format="kitti")
+            save_traj(traj_txt_pnp, global_poses_arr_pnp, format="kitti")
         elif "tum" in self.cfg.dataset:
             timestamps = sorted(list(self.rgb_d_pose_pair.keys()))
             global_poses_arr = convert_SE3_to_arr(self.global_poses, timestamps)
