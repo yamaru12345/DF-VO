@@ -359,16 +359,17 @@ class FrameDrawer():
         # Visualize full depth
         tmp_start_time = time()
         ################################
-        if vo.cfg.visualization.depth.use_tracking_depth:
-            tmp_vis_depth = vo.cur_data['depth']
-        else:
-            tmp_vis_depth = vo.cur_data['raw_depth']
+        if vo.tracking_stage > 1:
+            if vo.cfg.visualization.depth.use_tracking_depth:
+                tmp_vis_depth = vo.cur_data['depth']
+            else:
+                tmp_vis_depth = vo.cur_data['raw_depth']
 
-        vis_depth = tmp_vis_depth
-        normalizer = mpl.colors.Normalize(vmin=0, vmax=vo.cfg.depth.max_depth)
-        mapper = mpl.cm.ScalarMappable(norm=normalizer, cmap='magma')
-        colormapped_im = (mapper.to_rgba(vis_depth)[:, :, :3] * 255).astype(np.uint8)
-        np.save(f'./depth_{vo.ref_data["id"][0]}.npy', colormapped_im)
+            vis_depth = tmp_vis_depth
+            normalizer = mpl.colors.Normalize(vmin=0, vmax=vo.cfg.depth.max_depth)
+            mapper = mpl.cm.ScalarMappable(norm=normalizer, cmap='magma')
+            colormapped_im = (mapper.to_rgba(vis_depth)[:, :, :3] * 255).astype(np.uint8)
+            np.save(f'./depth_{vo.ref_data["id"][0]}.npy', colormapped_im)
         ################################
         if vo.drawer.display['depth'] and \
               (vo.cfg.visualization.depth.vis_full_depth or vo.cfg.visualization.depth.vis_full_disp):
