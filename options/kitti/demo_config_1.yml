@@ -73,7 +73,7 @@ crop:
 # ----------------------------------------------------------------------------
 visualization:
   window_h: 1152
-  window_w: 500
+  window_w: 1500
   save_img: True
   flow: 
     vis_full_flow: False
