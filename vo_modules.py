@@ -499,6 +499,10 @@ class VisualOdometry():
                         inlier_check = inliers.sum() > best_inlier_cnt
                     else:
                         assert False, "wrong cfg for compute_2d2d_pose.validity.method"
+                        
+                    ###########################################
+                    print(cheirality_cnt, R, t, inlier_check)
+                    ###########################################
                                       
                     if inlier_check:
                         best_Rt = [R, t]
