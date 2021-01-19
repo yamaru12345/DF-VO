@@ -828,9 +828,9 @@ class VisualOdometry():
                     # use PnP pose instead of E-pose
                     hybrid_pose = pnp_pose
                     
-                if status = 1:
+                if status == 1:
                     self.tracking_mode = "LC"
-                elif status = 2:
+                elif status == 2:
                     self.tracking_mode = "ZR"                    
                                 
                 ref_data['pose'][ref_id] = copy.deepcopy(hybrid_pose)
