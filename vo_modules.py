@@ -501,7 +501,7 @@ class VisualOdometry():
                         assert False, "wrong cfg for compute_2d2d_pose.validity.method"
                         
                     ###########################################
-                    print(cheirality_cnt, R, t, inlier_check)
+                    print(cheirality_cnt, inlier_check)
                     ###########################################
                                       
                     if inlier_check:
@@ -512,6 +512,10 @@ class VisualOdometry():
                 R = np.eye(3)
                 t = np.zeros((3, 1))
                 best_Rt = [R, t]
+            else:
+                ###########################################
+                print('updated')
+                ###########################################
         else:
             R = np.eye(3)
             t = np.zeros((3,1))
