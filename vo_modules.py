@@ -839,8 +839,10 @@ class VisualOdometry():
                 self.tracking_mode = "PnP"
                 
                 #####################################
+                print(hybrid_pose.t[2], hybrid_pose_pnp.t[2])
                 hybrid_pose.t[2] = max(0, hybrid_pose.t[2])
                 hybrid_pose_pnp.t[2] = max(0, hybrid_pose_pnp.t[2])
+                print(hybrid_pose.t[2], hybrid_pose_pnp.t[2])
                 #####################################
                 
                 ref_data['pose'][ref_id] = copy.deepcopy(hybrid_pose)
