@@ -72,7 +72,7 @@ crop:
 # Visualization
 # ----------------------------------------------------------------------------
 visualization:
-  window_h: 900
+  window_h: 1152
   window_w: 1500
   save_img: True
   flow: 
