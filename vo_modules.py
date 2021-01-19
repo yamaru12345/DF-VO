@@ -618,9 +618,9 @@ class VisualOdometry():
         self.cur_data['pose'].R = self.cur_data['pose'].R @ new_pose.R
         self.global_poses[self.cur_data['id']] = copy.deepcopy(self.cur_data['pose'])
         
-        self.cur_data['pose_pnp'].t = self.cur_data['pose_pnp'].R @ new_pose.t * scale \
+        self.cur_data['pose_pnp'].t = self.cur_data['pose_pnp'].R @ new_pose_pnp.t * scale \
                             + self.cur_data['pose_pnp'].t
-        self.cur_data['pose_pnp'].R = self.cur_data['pose_pnp'].R @ new_pose.R
+        self.cur_data['pose_pnp'].R = self.cur_data['pose_pnp'].R @ new_pose_pnp.R
         self.global_poses_pnp[self.cur_data['id']] = copy.deepcopy(self.cur_data['pose_pnp'])
         
         print(self.global_poses[self.cur_data['id']].t, self.global_poses_pnp[self.cur_data['id']].t)
