@@ -37,7 +37,6 @@ class VisualOdometry():
 
         # predicted global poses
         self.global_poses = {0: SE3()}
-        self.global_poses_pnp = {0: SE3()}
 
         # tracking stage
         self.tracking_stage = 0
