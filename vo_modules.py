@@ -617,13 +617,15 @@ class VisualOdometry():
             new_pose (SE3)
             scale (float): scaling factor
         """
-        self.cur_data['pose'].t = self.cur_data['pose'].R @ new_pose.t * scale \
-                            + self.cur_data['pose'].t
+        t = self.cur_data['pose'].R @ new_pose.t
+        t[2] = max(0, t[2])
+        self.cur_data['pose'].t = t * scale + self.cur_data['pose'].t
         self.cur_data['pose'].R = self.cur_data['pose'].R @ new_pose.R
         self.global_poses[self.cur_data['id']] = copy.deepcopy(self.cur_data['pose'])
         
-        self.cur_data['pose_pnp'].t = self.cur_data['pose_pnp'].R @ new_pose_pnp.t * scale \
-                            + self.cur_data['pose_pnp'].t
+        t_pnp = self.cur_data['pose'].R @ new_pose_pnp.t
+        t_pnp[2] = max(0, t_pnp[2])
+        self.cur_data['pose_pnp'].t = t_pnp * scale + self.cur_data['pose_pnp'].t
         self.cur_data['pose_pnp'].R = self.cur_data['pose_pnp'].R @ new_pose_pnp.R
         self.global_poses_pnp[self.cur_data['id']] = copy.deepcopy(self.cur_data['pose_pnp'])
         
@@ -841,14 +843,7 @@ class VisualOdometry():
                 # use PnP pose instead of E-pose
                 hybrid_pose_pnp = pnp_pose
                 self.tracking_mode = "PnP"
-                
-                #####################################
-                print(hybrid_pose.t[2], hybrid_pose_pnp.t[2])
-                hybrid_pose.t[2] = max(0, hybrid_pose.t[2])
-                hybrid_pose_pnp.t[2] = max(0, hybrid_pose_pnp.t[2])
-                print(hybrid_pose.t[2], hybrid_pose_pnp.t[2])
-                #####################################
-                
+                                
                 ref_data['pose'][ref_id] = copy.deepcopy(hybrid_pose)
                 ref_data['pose_pnp'][ref_id] = copy.deepcopy(hybrid_pose_pnp)
                 # ref_data['pose'][ref_id] = hybrid_pose
