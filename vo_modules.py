@@ -75,7 +75,6 @@ class VisualOdometry():
                         'depth': {},
                         'raw_depth': {},
                         'pose': {},
-                        'pose_pnp': {},
                         'kp': {},
                         'kp_best': {},
                         'kp_list': {},
@@ -91,7 +90,6 @@ class VisualOdometry():
                         'mask': np.zeros(1),
                         'depth': np.zeros(1),
                         'pose': np.eye(4),
-                        'pose_pnp': np.eye(4),
                         'kp': np.zeros(1),
                         'kp_best': np.zeros(1),
                         'kp_list': np.zeros(1),
@@ -494,16 +492,12 @@ class VisualOdometry():
                     
                     # check best inlier cnt
                     if valid_cfg.method == "flow+chei":
-                        inlier_check = inliers.sum() > best_inlier_cnt and cheirality_cnt > 0  # 50
+                        inlier_check = inliers.sum() > best_inlier_cnt and cheirality_cnt > 30  # 50
                     elif valid_cfg.method == "homo_ratio":
                         inlier_check = inliers.sum() > best_inlier_cnt
                     else:
                         assert False, "wrong cfg for compute_2d2d_pose.validity.method"
-                        
-                    ###########################################
-                    print(cheirality_cnt, inlier_check)
-                    ###########################################
-                                      
+                                                          
                     if inlier_check:
                         best_Rt = [R, t]
                         best_inlier_cnt = inliers.sum()
@@ -512,10 +506,7 @@ class VisualOdometry():
                 R = np.eye(3)
                 t = np.zeros((3, 1))
                 best_Rt = [R, t]
-            else:
-                ###########################################
-                print('updated')
-                ###########################################
+
         else:
             R = np.eye(3)
             t = np.zeros((3,1))
@@ -615,7 +606,7 @@ class VisualOdometry():
         pose.pose = pose.inv_pose
         return pose, kp1, kp2
 
-    def update_global_pose(self, new_pose, new_pose_pnp, scale):
+    def update_global_pose(self, new_pose, scale):
         """update estimated poses w.r.t global coordinate system
         Args:
             new_pose (SE3)
@@ -626,13 +617,7 @@ class VisualOdometry():
         self.cur_data['pose'].t = t * scale + self.cur_data['pose'].t
         self.cur_data['pose'].R = self.cur_data['pose'].R @ new_pose.R
         self.global_poses[self.cur_data['id']] = copy.deepcopy(self.cur_data['pose'])
-        
-        t_pnp = self.cur_data['pose'].R @ new_pose_pnp.t
-        t_pnp[2] = max(0, t_pnp[2])
-        self.cur_data['pose_pnp'].t = t_pnp * scale + self.cur_data['pose_pnp'].t
-        self.cur_data['pose_pnp'].R = self.cur_data['pose_pnp'].R @ new_pose_pnp.R
-        self.global_poses_pnp[self.cur_data['id']] = copy.deepcopy(self.cur_data['pose_pnp'])
-        
+                
                
     def find_scale_from_depth(self, kp1, kp2, T_21, depth2):
         """Compute VO scaling factor for T_21
@@ -810,7 +795,6 @@ class VisualOdometry():
             for ref_id in self.ref_data['id']:
                 # Compose hybrid pose
                 hybrid_pose = SE3()
-                hybrid_pose_pnp = SE3()
                 
                 # FIXME: add if statement for deciding which kp to use
                 # Essential matrix pose
@@ -819,7 +803,6 @@ class VisualOdometry():
                                 ref_data['kp_best'][ref_id]) # pose: from cur->ref
 
                 # Rotation
-                """
                 hybrid_pose.R = E_pose.R
                 
                 # translation scale from triangulation v.s. CNN-depth
@@ -829,11 +812,9 @@ class VisualOdometry():
                         E_pose.inv_pose, self.cur_data['depth']
                     )
                     if scale != -1:
-                        hybrid_pose.t = E_pose.t * scale
-                """
-                if np.linalg.norm(E_pose.t) != 0:
-                    hybrid_pose = E_pose
-                
+                        #hybrid_pose.t = E_pose.t * scale
+                        hybrid_pose.t = E_pose.t #######################
+                                       
                 # PnP if Essential matrix fail
                 #if np.linalg.norm(E_pose.t) == 0 or scale == -1:
                 pnp_pose, _, _ \
@@ -844,11 +825,10 @@ class VisualOdometry():
                                 cur_data['depth']
                                 ) # pose: from cur->ref
                 # use PnP pose instead of E-pose
-                hybrid_pose_pnp = pnp_pose
+                hybrid_pose = pnp_pose
                 self.tracking_mode = "PnP"
                                 
                 ref_data['pose'][ref_id] = copy.deepcopy(hybrid_pose)
-                ref_data['pose_pnp'][ref_id] = copy.deepcopy(hybrid_pose_pnp)
                 # ref_data['pose'][ref_id] = hybrid_pose
 
             self.ref_data = copy.deepcopy(ref_data)
@@ -860,8 +840,7 @@ class VisualOdometry():
             
             # update global poses
             pose = self.ref_data['pose'][self.ref_data['id'][-1]]
-            pose_pnp = self.ref_data['pose_pnp'][self.ref_data['id'][-1]]
-            self.update_global_pose(pose, pose_pnp, 1)
+            self.update_global_pose(pose, 1)
 
             self.tracking_stage += 1
             del(ref_data)
@@ -1115,12 +1094,9 @@ class VisualOdometry():
 
         # Save trajectory txt
         traj_txt = "{}/{}.txt".format(self.cfg.result_dir, self.cfg.seq)
-        traj_txt_pnp = "{}/{}_pnp.txt".format(self.cfg.result_dir, self.cfg.seq)
         if self.cfg.dataset == "kitti":
             global_poses_arr = convert_SE3_to_arr(self.global_poses)
-            global_poses_arr_pnp = convert_SE3_to_arr(self.global_poses_pnp)
             save_traj(traj_txt, global_poses_arr, format="kitti")
-            save_traj(traj_txt_pnp, global_poses_arr_pnp, format="kitti")
         elif "tum" in self.cfg.dataset:
             timestamps = sorted(list(self.rgb_d_pose_pair.keys()))
             global_poses_arr = convert_SE3_to_arr(self.global_poses, timestamps)
