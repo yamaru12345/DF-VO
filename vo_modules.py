@@ -458,6 +458,7 @@ class VisualOdometry():
                 np.random.shuffle(new_list)
                 new_kp_cur = kp_cur.copy()[new_list]
                 new_kp_ref = kp_ref.copy()[new_list]
+                status = 0
 
                 start_time = time()
                 E, inliers = cv2.findEssentialMat(
@@ -505,8 +506,10 @@ class VisualOdometry():
                 R = np.eye(3)
                 t = np.zeros((3, 1))
                 best_Rt = [R, t]
-
+            else:
+                status = 1
         else:
+            status = 2
             R = np.eye(3)
             t = np.zeros((3,1))
             best_Rt = [R, t]
@@ -514,7 +517,7 @@ class VisualOdometry():
         pose = SE3()
         pose.R = R
         pose.t = t
-        return pose, best_inliers
+        return pose, best_inliers, status
 
     def compute_pose_3d2d(self, kp1, kp2, depth_1, depth_2):
         """Compute pose from 3d-2d correspondences
@@ -796,9 +799,9 @@ class VisualOdometry():
                 
                 # FIXME: add if statement for deciding which kp to use
                 # Essential matrix pose
-                E_pose, _ = self.compute_pose_2d2d(
-                                cur_data['kp_best'],
-                                ref_data['kp_best'][ref_id]) # pose: from cur->ref
+                E_pose, _, status = self.compute_pose_2d2d(
+                    cur_data['kp_best'],
+                    ref_data['kp_best'][ref_id]) # pose: from cur->ref
 
                 # Rotation
                 hybrid_pose.R = E_pose.R
@@ -810,8 +813,8 @@ class VisualOdometry():
                         E_pose.inv_pose, self.cur_data['depth']
                     )
                     if scale != -1:
-                        hybrid_pose.t = E_pose.t * scale
-                        #hybrid_pose.t = E_pose.t #######################
+                        #hybrid_pose.t = E_pose.t * scale
+                        hybrid_pose.t = E_pose.t #######################
                                        
                 # PnP if Essential matrix fail
                 if np.linalg.norm(E_pose.t) == 0 or scale == -1:
@@ -824,7 +827,11 @@ class VisualOdometry():
                                     ) # pose: from cur->ref
                     # use PnP pose instead of E-pose
                     hybrid_pose = pnp_pose
-                    self.tracking_mode = "PnP"
+                    
+                if status = 1:
+                    self.tracking_mode = "LC"
+                elif status = 2:
+                    self.tracking_mode = "ZR"                    
                                 
                 ref_data['pose'][ref_id] = copy.deepcopy(hybrid_pose)
                 # ref_data['pose'][ref_id] = hybrid_pose
