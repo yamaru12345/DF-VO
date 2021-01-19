@@ -814,17 +814,17 @@ class VisualOdometry():
                         hybrid_pose.t = E_pose.t #######################
                                        
                 # PnP if Essential matrix fail
-                #if np.linalg.norm(E_pose.t) == 0 or scale == -1:
-                pnp_pose, _, _ \
-                    = self.compute_pose_3d2d(
-                                cur_data[self.cfg.PnP.kp_src],
-                                ref_data[self.cfg.PnP.kp_src][ref_id],
-                                ref_data['depth'][ref_id],
-                                cur_data['depth']
-                                ) # pose: from cur->ref
-                # use PnP pose instead of E-pose
-                hybrid_pose = pnp_pose
-                self.tracking_mode = "PnP"
+                if np.linalg.norm(E_pose.t) == 0 or scale == -1:
+                    pnp_pose, _, _ \
+                        = self.compute_pose_3d2d(
+                                    cur_data[self.cfg.PnP.kp_src],
+                                    ref_data[self.cfg.PnP.kp_src][ref_id],
+                                    ref_data['depth'][ref_id],
+                                    cur_data['depth']
+                                    ) # pose: from cur->ref
+                    # use PnP pose instead of E-pose
+                    hybrid_pose = pnp_pose
+                    self.tracking_mode = "PnP"
                                 
                 ref_data['pose'][ref_id] = copy.deepcopy(hybrid_pose)
                 # ref_data['pose'][ref_id] = hybrid_pose
