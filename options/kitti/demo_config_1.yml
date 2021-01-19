@@ -72,16 +72,16 @@ crop:
 # Visualization
 # ----------------------------------------------------------------------------
 visualization:
-  window_h: 900
-  window_w: 1500
+  window_h: 1152
+  window_w: 300
   save_img: True
   flow: 
-    vis_full_flow: True
-    vis_back_flow: True
-    vis_flow_diff: True
+    vis_full_flow: False
+    vis_back_flow: False
+    vis_flow_diff: False
   match:
     kp_num: 50  # -1 for using all
-    vis_type: 2
+    vis_type: None
       # None: None
       # 0: draw_match_2_side
       # 1: draw_match_temporal
@@ -94,7 +94,7 @@ visualization:
   depth:
     use_tracking_depth: False
     vis_full_depth: False
-    vis_full_disp: True
+    vis_full_disp: False
 
 # ----------------------------------------------------------------------------
 # Directories
