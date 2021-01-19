@@ -326,10 +326,11 @@ class FrameDrawer():
 
         # Visualize flow (forward; backward) and flow inconsistency
         tmp_start_time = time()
-        if vo.drawer.display['flow1'] and vo.cfg.visualization.flow.vis_full_flow and vo.tracking_stage > 1:
+        if vo.tracking_stage > 1:
             vis_flow = vo.ref_data['flow'][vo.ref_data['id'][0]].transpose(1,2,0)
             vis_flow = flow_to_image(vis_flow)
             np.save(f'./flow_{vo.ref_data["id"][0]}.npy', vis_flow)
+        if vo.drawer.display['flow1'] and vo.cfg.visualization.flow.vis_full_flow:
             vo.drawer.update_data("flow1", vis_flow)
         else:
             h, w, c = vo.drawer.data["flow1"][...].shape
@@ -364,12 +365,13 @@ class FrameDrawer():
             else:
                 tmp_vis_depth = vo.cur_data['raw_depth']
                     
+            vis_depth = tmp_vis_depth
+            normalizer = mpl.colors.Normalize(vmin=0, vmax=vo.cfg.depth.max_depth)
+            mapper = mpl.cm.ScalarMappable(norm=normalizer, cmap='magma')
+            colormapped_im = (mapper.to_rgba(vis_depth)[:, :, :3] * 255).astype(np.uint8)
+            np.save(f'./depth_{vo.ref_data["id"][0]}.npy', colormapped_im)
+                    
             if vo.cfg.visualization.depth.vis_full_depth:
-                vis_depth = tmp_vis_depth
-                normalizer = mpl.colors.Normalize(vmin=0, vmax=vo.cfg.depth.max_depth)
-                mapper = mpl.cm.ScalarMappable(norm=normalizer, cmap='magma')
-                colormapped_im = (mapper.to_rgba(vis_depth)[:, :, :3] * 255).astype(np.uint8)
-                np.save(f'./depth_{vo.ref_data["id"][0]}.npy', colormapped_im)
                 vo.drawer.update_data("depth", colormapped_im)
             
             # Visualize full inverse depth
