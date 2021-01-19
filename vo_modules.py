@@ -506,8 +506,8 @@ class VisualOdometry():
                 R = np.eye(3)
                 t = np.zeros((3, 1))
                 best_Rt = [R, t]
-            else:
                 status = 1
+                  
         else:
             status = 2
             R = np.eye(3)
