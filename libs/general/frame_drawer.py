@@ -364,9 +364,12 @@ class FrameDrawer():
                 tmp_vis_depth = vo.cur_data['depth']
             else:
                 tmp_vis_depth = vo.cur_data['raw_depth']
-
-            vis_depth = tmp_vis_depth
-            normalizer = mpl.colors.Normalize(vmin=0, vmax=vo.cfg.depth.max_depth)
+            vis_depth = 1/(tmp_vis_depth+1e-3)
+            if vo.cfg.dataset == "kitti":
+                vmax = 0.3
+            elif "tum" in vo.cfg.dataset:
+                vmax = 5
+            normalizer = mpl.colors.Normalize(vmin=0, vmax=vmax)
             mapper = mpl.cm.ScalarMappable(norm=normalizer, cmap='magma')
             colormapped_im = (mapper.to_rgba(vis_depth)[:, :, :3] * 255).astype(np.uint8)
             np.save(f'./depth_{vo.ref_data["id"][0]}.npy', colormapped_im)
