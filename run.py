@@ -27,7 +27,7 @@ parser.add_argument("-d", "--default_configuration", type=str,
                     help="default configuration files")
 parser.add_argument("-l", "--seq_length", type=int,
                     default=None, help="sequence length")
-parser.add_argument("-m", "--mask", type=int,
+parser.add_argument("-m", "--mask", type=str,
                     default=None)
 args = parser.parse_args()
 
