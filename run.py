@@ -8,6 +8,7 @@ import argparse
 import cv2
 import matplotlib.pyplot as plt
 import numpy as np
+import pickle
 import os
 
 from vo_modules import VisualOdometry as VO
@@ -26,6 +27,8 @@ parser.add_argument("-d", "--default_configuration", type=str,
                     help="default configuration files")
 parser.add_argument("-l", "--seq_length", type=int,
                     default=None, help="sequence length")
+parser.add_argument("-m", "--mask", type=int,
+                    default=None)
 args = parser.parse_args()
 
 """ Read configuration """
@@ -38,7 +41,10 @@ if args.seq is not None:
 cfg.seq = str(cfg.seq)
 if args.seq_length is not None:
     cfg.seq_length = args.seq_length
-
+if args.mask is not None:
+  with open(args.mask, 'rb') as f:
+    cfg.mask = pickle.load(f)
+    
 # Double check result directory
 #continue_flag = input("Save result in {}? [y/n]".format(cfg.result_dir))
 #if continue_flag == "y":
