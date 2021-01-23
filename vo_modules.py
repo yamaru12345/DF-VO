@@ -1029,7 +1029,7 @@ class VisualOdometry():
             self.timers.timers["img_reading"].append(time()-start_time)
             
             # Reading mask
-            mask = np.load(self.mask_dir+"/{:06d}.npy".format(img_id))
+            mask = self.cfg.mask[img_id]
             self.cur_data['mask'] = mask
            
             # Reading/Predicting depth
