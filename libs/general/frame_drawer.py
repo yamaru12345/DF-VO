@@ -239,7 +239,7 @@ class FrameDrawer():
         x, y, z = cur_t[0], cur_t[1], cur_t[2]
         draw_x = int(x*pred_draw_scale) + self.traj_x0
         draw_y = -(int(z*pred_draw_scale)) + self.traj_y0
-        cv2.circle(traj, (draw_x, draw_y), 2, (0, 255, 0), 1)
+        cv2.circle(traj, (draw_x, draw_y), 2, (0, 255, 0), -1)
         
         # Draw coordinate information
         cv2.rectangle(traj, (10, 20), (int(self.w/2), 60), (0, 0, 0), -1)
