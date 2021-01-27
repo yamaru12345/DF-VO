@@ -370,12 +370,13 @@ class LiteFlow():
                 tmp_kp_list = np.where(flow_diff > 0)
                 if flow_diff[tmp_kp_list].shape[0] > N_best:
                     sel_list = np.argpartition(flow_diff[tmp_kp_list], N_best)[:N_best]
+                    sel_kps = convert_idx_to_global_coord(sel_list, tmp_kp_list, [0, 0])
                 else:
-                    sel_list = flow_diff[tmp_kp_list]
-                print(np.argpartition(flow_diff[tmp_kp_list], N_best)[:N_best])
-                print()
-                print(flow_diff[tmp_kp_list])
-                sel_kps = convert_idx_to_global_coord(sel_list, tmp_kp_list, [0, 0])
+                    sel_kps = uniform_bestN_selection(
+                                flow_diff=flow_diff, 
+                                num_col=10,
+                                num_row=10,
+                                N=N_best)
             elif kp_sel_method == "uniform_bestN":
                 sel_kps = uniform_bestN_selection(
                                 flow_diff=flow_diff, 
