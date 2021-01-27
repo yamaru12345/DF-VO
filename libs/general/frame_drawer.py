@@ -330,6 +330,11 @@ class FrameDrawer():
             vis_flow = vo.ref_data['flow'][vo.ref_data['id'][0]].transpose(1,2,0)
             vis_flow = flow_to_image(vis_flow)
             np.save(f'./flow_{vo.ref_data["id"][0]}.npy', vis_flow)
+            vis_flow = vo.ref_data['flow_diff'][vo.ref_data['id'][0]][:,:,0]
+            normalizer = mpl.colors.Normalize(vmin=0, vmax=0.5)
+            mapper = mpl.cm.ScalarMappable(norm=normalizer, cmap='jet')
+            colormapped_im = (mapper.to_rgba(vis_flow)[:, :, :3] * 255).astype(np.uint8)
+            np.save(f'./flow_diff_{vo.ref_data["id"][0]}.npy', colormapped_im)
         if vo.drawer.display['flow1'] and vo.cfg.visualization.flow.vis_full_flow:
             vo.drawer.update_data("flow1", vis_flow)
         else:
