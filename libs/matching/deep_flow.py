@@ -363,6 +363,7 @@ class LiteFlow():
             # get best-N keypoints
             if kp_sel_method == "bestN":
                 flow_diff[mask.reshape(flow_diff.shape)] = 0
+                print(flow_data.shape, back_flow_data.shape)
                 flow_mag, _ = cv2.cartToPolar(flow_data[..., 0], flow_data[..., 1])
                 back_flow_mag, _ = cv2.cartToPolar(back_flow_data[..., 0], back_flow_data[..., 1])
                 flow_mask = (flow_mag < min_flow) + (back_flow_mag < min_flow)
