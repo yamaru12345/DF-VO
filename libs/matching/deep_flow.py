@@ -364,7 +364,7 @@ class LiteFlow():
             if kp_sel_method == "bestN":
                 flow_diff[mask.reshape(flow_diff.shape)] = 0
                 flow_mag, _ = cv2.cartToPolar(flow_data[0, 0,...], flow_data[0, 1,...])
-                back_flow_mag, _ = cv2.cartToPolar(back_flow_data[0, 0...], back_flow_data[0, 1,...])
+                back_flow_mag, _ = cv2.cartToPolar(back_flow_data[0, 0,...], back_flow_data[0, 1,...])
                 print(flow_mag.shape, back_flow_mag.shape)
                 flow_mask = (flow_mag < min_flow) + (back_flow_mag < min_flow)
                 print(flow_mask.shape)
