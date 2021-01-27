@@ -724,7 +724,7 @@ class VisualOdometry():
         batch_size = self.cfg.deep_flow.batch_size
         num_forward = int(np.ceil(len(ref_data['id']) / batch_size))
         ################################
-        print(ref_data['id'], ref_data['depth'][ref_data['id'][0]], np.logical_not(ref_data['depth'][ref_data['id'][0]])
+        print(ref_data['id'], ref_data['depth'][ref_data['id'][0]], np.logical_not(ref_data['depth'][ref_data['id'][0]]))
         mask = np.logical_not(ref_data['depth'][ref_data['id'][0]]) + cur_data['mask'] + ref_data['mask'][ref_data['id'][0]]
         for i in range(num_forward):
             # Read precomputed flow / real-time flow
