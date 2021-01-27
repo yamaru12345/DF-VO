@@ -31,7 +31,7 @@ PnP:
     iter: 1000  # 1000
     reproj_thre: 1
     repeat: 5  # 5
-  kp_src: kp_list # [kp_list, kp_best]
+  kp_src: kp_best # [kp_list, kp_best]
 
 # translation scale
 translation_scale:
