@@ -269,7 +269,8 @@ class LiteFlow():
                     N_list=None, N_best=None,
                     kp_sel_method=None,
                     dataset="kitti",
-                    mask=None):
+                    mask=None,
+                    min_flow=None):
         """Estimate flow (1->2) and form keypoints
         Args:
             img1 (Nx3xHxW numpy array): image 1
@@ -362,6 +363,11 @@ class LiteFlow():
             # get best-N keypoints
             if kp_sel_method == "bestN":
                 flow_diff[mask.reshape(flow_diff.shape)] = 0
+                flow_mag, _ = cv2.cartToPolar(flow_data[..., 0], flow_data[..., 1])
+                back_flow_mag, _ = cv2.cartToPolar(back_flow_data[..., 0], back_flow_data[..., 1])
+                flow_mask = (flow_mag < min_flow) + (back_flow_mag < min_flow)
+                np.save('./flow_mask.npy', flow_mask)
+                flow_diff[flow_mask] = 0
                 tmp_kp_list = np.where(flow_diff > 0)
                 sel_list = np.argpartition(flow_diff[tmp_kp_list], N_best)[:N_best]
                 sel_kps = convert_idx_to_global_coord(sel_list, tmp_kp_list, [0, 0])
