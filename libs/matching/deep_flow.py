@@ -367,7 +367,7 @@ class LiteFlow():
                 back_flow_mag, _ = cv2.cartToPolar(back_flow_data[..., 0], back_flow_data[..., 1])
                 flow_mask = (flow_mag < min_flow) + (back_flow_mag < min_flow)
                 np.save('./flow_mask.npy', flow_mask)
-                flow_diff[flow_mask] = 0
+                flow_diff[flow_mask.reshape(flow_diff.shape)] = 0
                 tmp_kp_list = np.where(flow_diff > 0)
                 sel_list = np.argpartition(flow_diff[tmp_kp_list], N_best)[:N_best]
                 sel_kps = convert_idx_to_global_coord(sel_list, tmp_kp_list, [0, 0])
