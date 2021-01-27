@@ -367,7 +367,7 @@ class LiteFlow():
                 back_flow_mag, _ = cv2.cartToPolar(back_flow_data[..., 0], back_flow_data[..., 1])
                 print(flow_mag.shape, back_flow_mag.shape)
                 flow_mask = (flow_mag < min_flow) + (back_flow_mag < min_flow)
-                print(flow_mask.shape
+                print(flow_mask.shape)
                 np.save('./flow_mask.npy', flow_mask)
                 flow_diff[flow_mask.reshape(flow_diff.shape)] = 0
                 tmp_kp_list = np.where(flow_diff > 0)
