@@ -376,7 +376,7 @@ class LiteFlow():
                                 flow_diff=flow_diff, 
                                 num_col=10,
                                 num_row=10,
-                                N=N_best)
+                                N=1)
             elif kp_sel_method == "uniform_bestN":
                 sel_kps = uniform_bestN_selection(
                                 flow_diff=flow_diff, 
