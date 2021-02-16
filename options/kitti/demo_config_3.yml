@@ -7,7 +7,7 @@ image:
   height: 720
   width: 1280
   ext: jpg
-result_dir: result/tmp/0
+result_dir: result/tmp/0/undist
 
 # ----------------------------------------------------------------------------
 # tracking options
