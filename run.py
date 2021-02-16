@@ -45,6 +45,7 @@ if args.seq_length is not None:
     cfg.seq_length = args.seq_length
 with open(args.mask, 'rb') as f:
   cfg.mask = pickle.load(f)
+print(args.vehicles)
 with open(args.vehicles, 'rb') as f:
   cfg.vehicles = pickle.load(f)
     
