@@ -45,8 +45,11 @@ if args.seq_length is not None:
     cfg.seq_length = args.seq_length
 with open(args.mask, 'rb') as f:
   cfg.mask = pickle.load(f)
-with open(args.vehicles, 'rb') as f:
-  cfg.vehicles = pickle.load(f)
+if args.vehicles != None:
+  with open(args.vehicles, 'rb') as f:
+    cfg.vehicles = pickle.load(f)
+else:
+  cfg.vehicles = None
   
 # Double check result directory
 #continue_flag = input("Save result in {}? [y/n]".format(cfg.result_dir))
