@@ -1002,6 +1002,7 @@ class VisualOdometry():
         
         #################
         kp_out = []
+        vehicles_out = []
         #################
         
         for img_id in tqdm(range(start_frame, len_seq)):
@@ -1052,7 +1053,13 @@ class VisualOdometry():
                                                     )
                 self.timers.timers['Depth-CNN'].append(time()-start_time)
             self.cur_data['depth'] = preprocess_depth(self.cur_data['raw_depth'], self.cfg.crop.depth_crop, [self.cfg.depth.min_depth, self.cfg.depth.max_depth])
-
+            
+            # unproject vehicles
+            point_v = self.cfg.vehicles[img_id]
+            depth_v = self.cur_data['raw_depth'][point_v[1], point_v[0]]
+            unprojection_v = unprojection_kp(point_v, depth_v, self.cam_intrinsics)
+            vehicles_out.append(unprojection_v)
+            
             """ Visual odometry """
             start_time = time()
             if self.tracking_method == "hybrid":
@@ -1082,6 +1089,8 @@ class VisualOdometry():
         import pickle
         with open(f'kp.pkl', 'wb') as f:
             pickle.dump(kp_out, f)
+        with open(f'vehicles_unprojection.pkl', 'wb') as f:
+            pickle.dump(vehicles_out, f)
         ##################################
 
         print("=> Finish!")
