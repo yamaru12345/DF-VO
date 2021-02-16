@@ -1060,7 +1060,6 @@ class VisualOdometry():
             p25, p75 = np.percentile(depth_v_mat, (25, 75))
             depth_v = depth_v_mat[(depth_v_mat >= p25) & (depth_v_mat <= p75)].mean()
             unprojection_v = unprojection_kp(point_v.reshape(1, 2), depth_v, self.cam_intrinsics)
-            print(img_id, point_v, depth_v_mat.flatten(), p25, p75, depth_v)
             vehicles_out.append(unprojection_v)
             
             """ Visual odometry """
