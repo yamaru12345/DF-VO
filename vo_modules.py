@@ -33,7 +33,7 @@ class VisualOdometry():
             cfg (edict): configuration reading from yaml file
         """
         # camera intrinsics
-        self.cam_intrinsics = Intrinsics()
+        self.cam_intrinsics = Intrinsics([658.30537808, 338.9084422, 595.0786313, 595.15208406])
 
         # predicted global poses
         self.global_poses = {0: SE3()}
