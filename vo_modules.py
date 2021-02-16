@@ -1056,13 +1056,11 @@ class VisualOdometry():
             
             # unproject vehicles
             point_v = self.cfg.vehicles[img_id]
-            depth_v = self.cur_data['raw_depth'][int(point_v[1]), int(point_v[0])]
-            depth_v1 = self.cur_data['raw_depth'][int(point_v[1]), int(point_v[0]) + 3]
-            depth_v2 = self.cur_data['raw_depth'][int(point_v[1] + 3), int(point_v[0])]
-            depth_v3 = self.cur_data['raw_depth'][int(point_v[1]), int(point_v[0]) + 5]
-            depth_v4 = self.cur_data['raw_depth'][int(point_v[1] + 5), int(point_v[0])]
+            depth_v_mat = self.cur_data['raw_depth'][int(point_v[1]) - 3:int(point_v[1]) + 3, int(point_v[0]) - 3: int(point_v[0]) + 3]
+            p25, p27 = np.percentile(depth_v_mat, (25, 75))
+            depth_v = depth_v_mat[(depth_v_mat >= p25) & (depth_v_mat <= p75)].mean()
             unprojection_v = unprojection_kp(point_v.reshape(1, 2), depth_v, self.cam_intrinsics)
-            print(img_id, point_v, depth_v, depth_v1, depth_v2, depth_v3, depth_v4)
+            print(img_id, point_v, depth_v_mat.flatten(), p25, p75, depth_v)
             vehicles_out.append(unprojection_v)
             
             """ Visual odometry """
