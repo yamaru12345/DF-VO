@@ -1030,10 +1030,6 @@ class VisualOdometry():
             self.cur_data['img'] = img
             self.timers.timers["img_reading"].append(time()-start_time)
             
-            #########
-            print(img.shape)
-            #########
-            
             # Reading mask
             mask = self.cfg.mask[img_id]
             self.cur_data['mask'] = mask
@@ -1056,20 +1052,16 @@ class VisualOdometry():
                                                     interpolation=cv2.INTER_NEAREST
                                                     )
                 self.timers.timers['Depth-CNN'].append(time()-start_time)
-            self.cur_data['depth'] = preprocess_depth(self.cur_data['raw_depth'], self.cfg.crop.depth_crop, [self.cfg.depth.min_depth, self.cfg.depth.max_depth])
-            
-            #########
-            print(self.cur_data['depth'].shape)
-            #########
-            
+            self.cur_data['depth'] = preprocess_depth(self.cur_data['raw_depth'], self.cfg.crop.depth_crop, [self.cfg.depth.min_depth, self.cfg.depth.max_depth])          
             
             # unproject vehicles
-            point_v = self.cfg.vehicles[img_id]
-            depth_v_mat = self.cur_data['raw_depth'][int(point_v[1]) - 3:int(point_v[1]) + 3, int(point_v[0]) - 3: int(point_v[0]) + 3]
-            p25, p75 = np.percentile(depth_v_mat, (25, 75))
-            depth_v = depth_v_mat[(depth_v_mat >= p25) & (depth_v_mat <= p75)].mean()
-            unprojection_v = unprojection_kp(point_v.reshape(1, 2), depth_v, self.cam_intrinsics)
-            vehicles_out.append(unprojection_v)
+            if self.cfg.vehicles != None:
+                point_v = self.cfg.vehicles[img_id]
+                depth_v_mat = self.cur_data['raw_depth'][int(point_v[1]) - 3:int(point_v[1]) + 3, int(point_v[0]) - 3: int(point_v[0]) + 3]
+                p25, p75 = np.percentile(depth_v_mat, (25, 75))
+                depth_v = depth_v_mat[(depth_v_mat >= p25) & (depth_v_mat <= p75)].mean()
+                unprojection_v = unprojection_kp(point_v.reshape(1, 2), depth_v, self.cam_intrinsics)
+                vehicles_out.append(unprojection_v)
             
             """ Visual odometry """
             start_time = time()
