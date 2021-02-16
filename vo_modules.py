@@ -1056,6 +1056,8 @@ class VisualOdometry():
             
             # unproject vehicles
             point_v = self.cfg.vehicles[img_id]
+            print(point_v)
+            print(point_v[0, :])
             depth_v = self.cur_data['raw_depth'][int(point_v[1]), int(point_v[0])]
             unprojection_v = unprojection_kp(point_v, depth_v, self.cam_intrinsics)
             print(img_id, point_v, depth_v, unprojection_v)
