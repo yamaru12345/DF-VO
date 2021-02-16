@@ -1030,6 +1030,10 @@ class VisualOdometry():
             self.cur_data['img'] = img
             self.timers.timers["img_reading"].append(time()-start_time)
             
+            #########
+            print(img.shape)
+            #########
+            
             # Reading mask
             mask = self.cfg.mask[img_id]
             self.cur_data['mask'] = mask
@@ -1053,6 +1057,11 @@ class VisualOdometry():
                                                     )
                 self.timers.timers['Depth-CNN'].append(time()-start_time)
             self.cur_data['depth'] = preprocess_depth(self.cur_data['raw_depth'], self.cfg.crop.depth_crop, [self.cfg.depth.min_depth, self.cfg.depth.max_depth])
+            
+            #########
+            print(self.cur_data['depth'].shape)
+            #########
+            
             
             # unproject vehicles
             point_v = self.cfg.vehicles[img_id]
