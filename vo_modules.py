@@ -1055,7 +1055,7 @@ class VisualOdometry():
             self.cur_data['depth'] = preprocess_depth(self.cur_data['raw_depth'], self.cfg.crop.depth_crop, [self.cfg.depth.min_depth, self.cfg.depth.max_depth])          
             
             # unproject vehicles
-            if self.cfg.vehicles  None:
+            if self.cfg.vehicles is not None:
                 point_v = self.cfg.vehicles[img_id]
                 depth_v_mat = self.cur_data['raw_depth'][int(point_v[1]) - 3:int(point_v[1]) + 3, int(point_v[0]) - 3: int(point_v[0]) + 3]
                 p25, p75 = np.percentile(depth_v_mat, (25, 75))
